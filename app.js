@@ -49,6 +49,11 @@ dotenv.config();
 const PORT = process.env.PORT;
 
 const app = express();
+// Behind the nginx reverse proxy that terminates SSL, trust the first proxy so
+// req.protocol/req.secure/req.ip reflect the real client (needed for correct
+// Secure-cookie behaviour and accurate client IPs). Safe: no existing code reads
+// these request properties, so this changes no current behaviour.
+app.set("trust proxy", 1);
 connectDB();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
